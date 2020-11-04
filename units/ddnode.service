@@ -1,0 +1,12 @@
+[Unit]
+Description=Node service to update IP on Route 53
+After=network-online.target
+Requires=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/node /opt/ddnode/index.js
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target

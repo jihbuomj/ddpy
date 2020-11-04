@@ -1,0 +1,29 @@
+[config]
+cachePath = "/var/cache/ddpy.cache"
+ip_plugin = "interfacecheck"
+# ip_plugin = "webcheck"
+
+[interfacecheck]
+interface = "enp0s3"
+
+[webcheck]
+webCheckUrl = "http://ipv4bot.whatismyipaddress.com/"
+
+[[zones]]
+plugin = "route53"
+access_key = "ABC123"
+secret_access_key = "123/ABC"
+zone = "zone1.com." # note fqdn with trailing perioid
+domains = [
+	"zone1.com.",
+	"plex.zone1.com.",
+	"git.zone1.com.",
+	"mc.zone1.com."
+]
+
+[[zones]]
+plugin = "route52"
+zone = "zone2.ch."
+domains = [
+	"zone2.ch."
+]
