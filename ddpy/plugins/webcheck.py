@@ -4,7 +4,7 @@ import requests
 import json
 
 def get_ip(config):
-    response = requests.get(config['config']['webCheckUrl']).text
+    response = requests.get(config[__name__]['webCheckUrl']).text
     ip = re.search('\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', response).group(0)
     return {
             'ip': ip,

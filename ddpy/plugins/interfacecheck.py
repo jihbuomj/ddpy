@@ -29,11 +29,17 @@ def get_ip(config):
 
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-    ip = socket.inet_ntoa(fcntl.ioctl(
-            s.fileno(),
-            0x8915,
-            struct.pack('256s', bytes(interface, 'ascii')[:15])
-    )[20:24])
+    try:
+        ip = socket.inet_ntoa(fcntl.ioctl(
+                s.fileno(),
+                0x8915,
+                struct.pack('256s', bytes(interface, 'ascii')[:15])
+        )[20:24])
+    except OSError as err:
+        if err.errno == 19:
+            logger.error(f'No interface named {interface}')
+            raise ValueError
+
     return {
             'ip': ip,
             'interface': interface,
