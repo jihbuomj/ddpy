@@ -1,5 +1,6 @@
 [config]
-cachePath = "/var/cache/ddpy.cache"
+cache_path = "/var/cache/ddpy.cache"
+log_file = "/var/log/ddpy.log"
 ip_plugin = "interfacecheck"
 # ip_plugin = "webcheck"
 
@@ -7,7 +8,7 @@ ip_plugin = "interfacecheck"
 interface = "enp0s3"
 
 [webcheck]
-webCheckUrl = "http://ipv4bot.whatismyipaddress.com/"
+web_check_url = "http://ipv4bot.whatismyipaddress.com/"
 
 [[zones]]
 plugin = "route53"
