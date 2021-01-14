@@ -1,5 +1,4 @@
 from importlib.machinery import FileFinder, SOURCE_SUFFIXES, SourceFileLoader
-from importlib._bootstrap import _init_module_attrs
 from importlib.util import module_from_spec
 import sys
 import pathlib
@@ -7,25 +6,26 @@ import toml
 import logging
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-stream_format = logging.Formatter('%(levelname)s:%(name)s:%(message)s')
-stream_handler = logging.StreamHandler()
-stream_handler.setLevel(logging.WARNING)
-stream_handler.setFormatter(stream_format)
-logger.addHandler(stream_handler)
+
 
 def load_config(path):
-    config_file_list = ['./ddpy.toml', '/etc/ddpy/ddpy.toml']
+    config_file_list = ['ddpy.toml', '/etc/ddpy/ddpy.toml']
 
     if path:
         config_file_list.insert(0, path)
 
     for config_file in config_file_list:
         if pathlib.Path(config_file).exists():
-            return toml.load(config_file)
+            try:
+                return toml.load(config_file)
+            except:
+                logger.error(f'{config_file} is not valid')
+        else:
+            logger.info(f'{config_file} not found')
 
     logger.error('No config found')
     sys.exit(1)
+
 
 def load_plugins(plugin_path):
     finder = FileFinder(str(plugin_path), (SourceFileLoader, SOURCE_SUFFIXES))

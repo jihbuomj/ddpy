@@ -4,20 +4,45 @@ import logging
 import argparse
 from ddpy.loaders import load_plugins, load_config
 
-def main():
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.INFO)
-    stream_format = logging.Formatter('%(levelname)s:%(name)s:%(message)s')
-    stream_handler = logging.StreamHandler()
-    stream_handler.setLevel(logging.WARNING)
-    stream_handler.setFormatter(stream_format)
-    logger.addHandler(stream_handler)
+log_format = logging.Formatter(
+    '%(asctime)s - %(levelname)s:%(name)s - %(message)s')
 
-    parser = argparse.ArgumentParser(description='Dynamic DNS client written in python')
-    parser.add_argument('--config')
+
+def generate_logger(log_file):
+    logger_temp = logging.getLogger('ddpy')
+
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(log_format)
+
+    if(log_file):
+        file_handler = logging.FileHandler(log_file)
+        file_handler.setFormatter(log_format)
+        logger_temp.addHandler(file_handler)
+
+    logger_temp.addHandler(stream_handler)
+
+    return logger_temp
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        prog='ddpy', description='Dynamic DNS client written in python')
+    parser.add_argument('--config', metavar='PATH', help='path to config file')
+    parser.add_argument(
+        '--loglevel', choices=['CRITICAL', 'FATAL', 'ERROR', 'WARN', 'WARNING', 'INFO', 'DEBUG', 'NOTSET'])
+    parser.add_argument('--log', metavar='PATH', help='path to log file')
     args = parser.parse_args()
 
+    logger = generate_logger(args.log)
+    if args.loglevel:
+        logger.setLevel(args.loglevel)
+
     config = load_config(args.config)
+
+    if config['config']['log_file'] and not args.log:
+        file_handler = logging.FileHandler(config['config']['log_file'])
+        file_handler.setFormatter(log_format)
+        logger.addHandler(file_handler)
 
     plugins = load_plugins(pathlib.Path(__file__).parent.parent / 'plugins')
     if 'plugin_dirs' in config:

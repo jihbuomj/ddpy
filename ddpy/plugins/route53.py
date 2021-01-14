@@ -1,5 +1,9 @@
 import os
 import boto3
+import logging
+
+logger = logging.getLogger(f'ddpy.plugin.{__name__}')
+
 
 def update_domains(ip_info, config):
     if (
@@ -18,32 +22,32 @@ def update_domains(ip_info, config):
         aws_access_key_id = None
         aws_secret_access_key = None
 
-
     route53 = boto3.client(
-            'route53',
-            aws_access_key_id=aws_access_key_id,
-            aws_secret_access_key=aws_secret_access_key
+        'route53',
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key
     )
 
     hosted_zones = route53.list_hosted_zones()['HostedZones']
 
     for zone in hosted_zones:
         if zone['Name'] == config['zone']:
-            record_set_map = lambda domain, new_ip: {
-                    'Action': 'UPSERT',
-                    'ResourceRecordSet': {
-                        'Name': domain,
-                        'ResourceRecords': [
-                            {
-                                'Value': new_ip,
-                            },
-                        ],
-                        'TTL': 60,
-                        'Type': 'A',
-                    },
+            def record_set_map(domain, new_ip): return {
+                'Action': 'UPSERT',
+                'ResourceRecordSet': {
+                    'Name': domain,
+                    'ResourceRecords': [
+                        {
+                            'Value': new_ip,
+                        },
+                    ],
+                    'TTL': 60,
+                    'Type': 'A',
+                },
             }
 
-            changes = [record_set_map(domain, ip_info['ip']) for domain in config['domains']]
+            changes = [record_set_map(domain, ip_info['ip'])
+                       for domain in config['domains']]
 
             if 'comment' in config:
                 comment = config['comment']
@@ -51,11 +55,11 @@ def update_domains(ip_info, config):
                 comment = 'Changes made by ddpy'
 
             change_batch = {
-                    'Changes': changes,
-                    'Comment': comment
+                'Changes': changes,
+                'Comment': comment
             }
             route53.change_resource_record_sets(
-                    ChangeBatch=change_batch,
-                    HostedZoneId=zone['Id']
+                ChangeBatch=change_batch,
+                HostedZoneId=zone['Id']
             )
             break
