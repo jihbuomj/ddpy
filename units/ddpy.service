@@ -1,11 +1,11 @@
 [Unit]
-Description=Node service to update IP on Route 53
+Description=Run ddpy when host comes online
 After=network-online.target
 Requires=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/node /opt/ddnode/index.js
+ExecStart=/usr/bin/ddpy
 RemainAfterExit=true
 
 [Install]
