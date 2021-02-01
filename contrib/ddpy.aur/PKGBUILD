@@ -1,15 +1,15 @@
 # Maintainer: Joe Moubhij <josephmoubhij@gmail.com>
 
-_pkgname=ddpy
+_pkgname=ddpy-core
 pkgname=python-ddpy-git
-pkgver=0.1.0
+pkgver=0.1.1
 pkgrel=1
 pkgdesc='Dynamic DNS client written in python'
 arch=(any)
 url="https://github.com/jihbuomj/${_pkgname}"
 license=('MIT')
 depends=('python-toml')
-optdepends=('python-boto3: For Route53 update'
+optdepends=('python-ddpy-route53-git: For Route53 update'
 	'python-requests: For webchecking ip')
 makedepends=('git' 'python-setuptools' 'python-dephell')
 provides=('ddpy' 'python-ddpy')
@@ -27,10 +27,6 @@ build() {
 	cd ${_pkgname}
 	python setup.py build
 }
-
-# check() {
-# 	cd "${srcdir}/${_pkgname}"
-# }
 
 package() {
 	cd ${_pkgname}
