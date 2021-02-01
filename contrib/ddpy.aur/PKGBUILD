@@ -1,6 +1,6 @@
 # Maintainer: Joe Moubhij <josephmoubhij@gmail.com>
 
-_pkgname=ddpy-core
+_pkgname=ddpy
 pkgname=python-ddpy-git
 pkgver=0.1.1
 pkgrel=1
