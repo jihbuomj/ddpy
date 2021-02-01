@@ -1,8 +1,11 @@
 [tool.poetry]
-name = "ddpy"
-version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+name = "ddpy-core"
+version = "0.1.1"
+description = "Dynamic DNS client written in python"
+authors = ["Joe Moubhij <josephmoubhij@gmail.com>"]
+packages = [
+	{ include = "ddpy" },
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"
