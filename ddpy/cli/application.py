@@ -7,7 +7,7 @@ from ddpy.plugin_base import GetPluginBase, GivePluginBase
 from ddpy.loaders import load_plugins, load_config
 
 
-def main():
+def run():
     parser = argparse.ArgumentParser(
         prog='ddpy', description='dynamic dns client written in python')
     parser.add_argument('--config', metavar='path', help='path to config file')
