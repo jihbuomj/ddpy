@@ -4,7 +4,7 @@ import logging
 import argparse
 import importlib
 from ddpy.plugin_base import GetPluginBase, GivePluginBase
-from ddpy.loaders import load_plugins, load_config
+from ddpy.loaders import load_config
 
 
 def run():
